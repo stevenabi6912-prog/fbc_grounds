@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <title>Grounds Map — Fourth of July Celebration</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Top banner -->
+  <header id="banner">
+    <span class="banner-star">★</span>
+    <span class="banner-title">Fourth of July Celebration</span>
+    <span class="banner-star">★</span>
+  </header>
+
+  <!-- The map -->
+  <div id="viewport">
+    <div id="canvas">
+      <img id="map" src="public/grounds-map.png" alt="Event grounds map" draggable="false" />
+      <div id="marker-layer"></div>
+      <!-- missing-image fallback -->
+      <div id="no-map" hidden>
+        <p>🗺️</p>
+        <p>Map image not found.</p>
+        <p class="small">Put your image at <code>public/grounds-map.png</code></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zoom controls -->
+  <div id="zoom-controls">
+    <button id="zoom-in"  aria-label="Zoom in">＋</button>
+    <button id="zoom-out" aria-label="Zoom out">－</button>
+    <button id="zoom-reset" aria-label="Reset view">⟳</button>
+  </div>
+
+  <!-- Info card / bottom sheet -->
+  <div id="card-backdrop" hidden></div>
+  <aside id="card" hidden aria-live="polite">
+    <!-- filled in by app.js -->
+  </aside>
+
+  <!-- ===== EDIT MODE UI (hidden unless ?edit=1) ===== -->
+  <div id="edit-toolbar" hidden>
+    <div class="edit-row">
+      <strong>✎ EDIT MODE</strong>
+      <button id="btn-add">＋ Add marker</button>
+      <button id="btn-export">⬇ Export</button>
+      <button id="btn-help">?</button>
+    </div>
+    <div id="edit-hint">Tap a pin to edit it. Drag to move. Use Add, then tap the map to drop a new pin.</div>
+  </div>
+
+  <!-- Help panel -->
+  <div id="help-panel" hidden>
+    <div class="help-inner">
+      <h2>Edit mode — how it works</h2>
+      <ul>
+        <li><b>Move a pin:</b> drag it anywhere on the map.</li>
+        <li><b>Open a pin:</b> tap it to edit its name, description, time, and icon type.</li>
+        <li><b>Add a pin:</b> tap <b>＋ Add marker</b>, then tap the spot on the map.</li>
+        <li><b>Duplicate:</b> open a pin and tap <b>Duplicate</b> (great for multiple restrooms). Or press <b>Ctrl/⌘+C</b> then <b>Ctrl/⌘+V</b>.</li>
+        <li><b>Delete:</b> open a pin and tap <b>Delete</b>.</li>
+        <li><b>Save your changes:</b> tap <b>⬇ Export</b>, copy the text, and paste it over everything in <code>locations.js</code>. Commit &amp; push. Changes can't auto-save — this site is static.</li>
+      </ul>
+      <button id="btn-help-close">Got it</button>
+    </div>
+  </div>
+
+  <!-- Export panel -->
+  <div id="export-panel" hidden>
+    <div class="export-inner">
+      <h2>Export — paste this over <code>locations.js</code></h2>
+      <p class="small">Select all, copy, and replace the entire contents of your <code>locations.js</code> file. Then commit &amp; push to GitHub.</p>
+      <textarea id="export-text" readonly spellcheck="false"></textarea>
+      <div class="export-actions">
+        <button id="btn-copy-export">📋 Copy to clipboard</button>
+        <button id="btn-export-close">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="locations.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,300 @@
+/* ============================================================================
+   Vintage 1920s Americana — Fourth of July
+   Palette: barn red, navy, cream/parchment, gold accents
+   ========================================================================== */
+:root {
+  --navy:   #1d2a4d;
+  --red:    #b22234;
+  --cream:  #f5ecd7;
+  --gold:   #c8a04b;
+  --gold-lt:#e2c885;
+  --ink:    #23252b;
+  --shadow: rgba(0,0,0,.28);
+  --banner-h: 48px;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  margin: 0; padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--navy);
+  color: var(--ink);
+  font-family: "Georgia", "Times New Roman", serif;
+  overscroll-behavior: none;
+}
+
+/* ---- Top banner ---- */
+#banner {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--banner-h);
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  background:
+    repeating-linear-gradient(90deg, var(--red) 0 20px, var(--cream) 20px 40px);
+  border-bottom: 3px solid var(--gold);
+  z-index: 30;
+  padding-top: env(safe-area-inset-top);
+  box-shadow: 0 2px 8px var(--shadow);
+}
+.banner-title {
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-size: clamp(14px, 4.2vw, 20px);
+  color: var(--navy);
+  background: var(--cream);
+  padding: 3px 14px;
+  border-radius: 4px;
+  border: 2px solid var(--navy);
+  white-space: nowrap;
+}
+.banner-star { color: var(--gold); font-size: 20px; text-shadow: 0 1px 0 var(--navy); }
+
+/* ---- Map viewport ---- */
+#viewport {
+  position: fixed;
+  top: var(--banner-h); left: 0; right: 0; bottom: 0;
+  overflow: hidden;
+  touch-action: none;
+  background: var(--navy);
+  cursor: grab;
+}
+#viewport.grabbing { cursor: grabbing; }
+#viewport.adding   { cursor: crosshair; }
+
+#canvas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  transform-origin: 0 0;
+  --s: 1;
+  will-change: transform;
+}
+#map {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* ---- Missing image fallback ---- */
+#no-map {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(45deg, #24345f 0 24px, #1d2a4d 24px 48px);
+  color: var(--cream);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; gap: 6px;
+  font-size: 18px;
+}
+#no-map p { margin: 2px; }
+#no-map p:first-child { font-size: 54px; }
+#no-map .small { font-size: 13px; opacity: .8; }
+#no-map code { background: rgba(0,0,0,.35); padding: 2px 6px; border-radius: 4px; }
+
+/* ---- Markers ----
+   The dot is anchored by its CENTER on the x/y point (translate -50%,-50%),
+   and counter-scaled (1/--s) so it stays a constant ~40px on screen at any
+   zoom. It's a clean circle — no pin tail — so the tap/drag point IS the
+   visual center. */
+.marker {
+  position: absolute;
+  width: 40px; height: 40px;
+  margin: 0;
+  transform: translate(-50%, -50%) scale(calc(1 / var(--s)));
+  transform-origin: center center;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--cream);
+  border: 2.5px solid var(--navy);
+  border-radius: 50%;
+  box-shadow: 0 3px 6px var(--shadow), inset 0 0 0 2px var(--gold-lt);
+  font-size: 21px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 5;
+  touch-action: none;
+  transition: box-shadow .12s ease;
+}
+/* Hit area == the visible dot. Deliberately NOT enlarged: when several pins
+   sit close together, an invisible halo would let the top dot swallow taps
+   meant for its neighbor. A clean 40px circle means "you tap the one you see." */
+.marker.selected {
+  box-shadow: 0 0 0 4px var(--gold), 0 4px 10px var(--shadow);
+  z-index: 20;
+}
+.marker.dragging { z-index: 30; opacity: .92; }
+body.edit-mode .marker { cursor: grab; }
+
+/* ---- Zoom controls ---- */
+#zoom-controls {
+  position: fixed;
+  right: 12px; bottom: 16px;
+  display: flex; flex-direction: column; gap: 8px;
+  z-index: 25;
+}
+#zoom-controls button {
+  width: 46px; height: 46px;
+  font-size: 22px;
+  border-radius: 50%;
+  border: 2.5px solid var(--navy);
+  background: var(--cream);
+  color: var(--navy);
+  box-shadow: 0 3px 6px var(--shadow);
+  cursor: pointer;
+}
+#zoom-controls button:active { transform: translateY(1px); }
+
+/* ---- Info card / bottom sheet ---- */
+#card-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.28);
+  z-index: 40;
+}
+#card {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 41;
+  background: var(--cream);
+  border-top: 5px solid var(--red);
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 -6px 24px var(--shadow);
+  padding: 14px 18px calc(18px + env(safe-area-inset-bottom));
+  max-width: 640px;
+  margin: 0 auto;
+  animation: slideUp .18s ease-out;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+.card-grab {
+  width: 44px; height: 5px; border-radius: 3px;
+  background: var(--gold);
+  margin: 0 auto 12px;
+}
+.card-head {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 6px;
+}
+.card-icon {
+  flex: 0 0 auto;
+  width: 52px; height: 52px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  background: #fff;
+  border: 2.5px solid var(--navy);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 2px var(--gold-lt);
+}
+.card-title { margin: 0; font-size: 22px; color: var(--navy); letter-spacing: .5px; }
+.card-time {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 14px; font-weight: bold;
+  color: #fff; background: var(--red);
+  padding: 2px 10px; border-radius: 20px;
+  letter-spacing: .5px;
+}
+.card-desc { font-size: 16px; line-height: 1.45; margin: 12px 2px; color: var(--ink); }
+.card-close {
+  margin-top: 6px;
+  width: 100%;
+  padding: 12px;
+  font-size: 16px; font-weight: bold;
+  color: var(--cream); background: var(--navy);
+  border: none; border-radius: 10px;
+  cursor: pointer; font-family: inherit;
+}
+
+/* ---- Edit fields inside card ---- */
+.edit-field { display: block; margin: 10px 2px 4px; font-size: 13px; font-weight: bold; color: var(--navy); text-transform: uppercase; letter-spacing: 1px; }
+#card input, #card select, #card textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  font-family: inherit;
+  border: 2px solid var(--navy);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+}
+#card textarea { resize: vertical; min-height: 70px; }
+.card-btn-row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.card-btn-row button {
+  flex: 1 1 auto;
+  padding: 12px;
+  font-size: 15px; font-weight: bold;
+  border: none; border-radius: 10px;
+  cursor: pointer; font-family: inherit;
+  min-width: 90px;
+}
+.btn-dup    { background: var(--gold); color: var(--navy); }
+.btn-del    { background: var(--red);  color: #fff; }
+.btn-done   { background: var(--navy); color: var(--cream); }
+
+/* ---- Edit toolbar ---- */
+#edit-toolbar {
+  position: fixed;
+  top: var(--banner-h); left: 0; right: 0;
+  z-index: 28;
+  background: var(--navy);
+  color: var(--cream);
+  border-bottom: 2px solid var(--gold);
+  padding: 8px 12px;
+  padding-top: 8px;
+}
+.edit-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.edit-row strong { color: var(--gold-lt); letter-spacing: 1px; margin-right: auto; }
+.edit-row button {
+  padding: 8px 12px;
+  font-size: 14px; font-weight: bold;
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  background: var(--cream); color: var(--navy);
+  cursor: pointer; font-family: inherit;
+}
+.edit-row button.armed { background: var(--gold); }
+#edit-hint { font-size: 12px; opacity: .85; margin-top: 6px; }
+body.edit-mode #viewport { top: calc(var(--banner-h) + 82px); }
+
+/* ---- Help & Export panels ---- */
+#help-panel, #export-panel {
+  position: fixed; inset: 0;
+  z-index: 50;
+  background: rgba(0,0,0,.5);
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+}
+.help-inner, .export-inner {
+  background: var(--cream);
+  border: 4px solid var(--red);
+  border-radius: 14px;
+  padding: 18px;
+  max-width: 560px; width: 100%;
+  max-height: 86vh; overflow-y: auto;
+}
+.help-inner h2, .export-inner h2 { color: var(--navy); margin-top: 0; }
+.help-inner ul { padding-left: 20px; line-height: 1.55; }
+.help-inner li { margin-bottom: 8px; }
+.help-inner button, .export-actions button {
+  padding: 12px 16px;
+  font-size: 15px; font-weight: bold;
+  border: none; border-radius: 10px;
+  cursor: pointer; font-family: inherit;
+  background: var(--navy); color: var(--cream);
+}
+.small { font-size: 13px; color: #555; }
+code { background: rgba(0,0,0,.08); padding: 1px 5px; border-radius: 4px; font-size: .95em; }
+#export-text {
+  width: 100%; height: 300px;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 12px;
+  border: 2px solid var(--navy); border-radius: 8px;
+  padding: 10px; margin-top: 8px;
+  background: #fff; color: var(--ink);
+  white-space: pre;
+}
+.export-actions { display: flex; gap: 8px; margin-top: 10px; }
+.export-actions button { flex: 1; }
+#btn-copy-export { background: var(--gold); color: var(--navy); }
