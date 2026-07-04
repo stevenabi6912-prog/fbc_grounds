@@ -354,15 +354,29 @@
     document.body.classList.add("edit-mode");
     editToolbar.hidden = false;
 
+    var helpPanel   = document.getElementById("help-panel");
+    var exportPanel = document.getElementById("export-panel");
+
     document.getElementById("btn-add").onclick    = function () { setArmed(!addArmed); };
     document.getElementById("btn-export").onclick = openExport;
-    document.getElementById("btn-help").onclick   = function () { document.getElementById("help-panel").hidden = false; };
-    document.getElementById("btn-help-close").onclick  = function () { document.getElementById("help-panel").hidden = true; };
-    document.getElementById("btn-export-close").onclick = function () { document.getElementById("export-panel").hidden = true; };
+    document.getElementById("btn-help").onclick   = function () { helpPanel.hidden = false; };
+    document.getElementById("btn-help-close").onclick  = function () { helpPanel.hidden = true; };
+    document.getElementById("btn-export-close").onclick = function () { exportPanel.hidden = true; };
     document.getElementById("btn-copy-export").onclick  = copyExport;
 
-    // keyboard copy/paste of the selected marker
+    // Never get trapped: clicking the dark area outside a panel closes it.
+    helpPanel.addEventListener("click", function (e) { if (e.target === helpPanel) helpPanel.hidden = true; });
+    exportPanel.addEventListener("click", function (e) { if (e.target === exportPanel) exportPanel.hidden = true; });
+
+    // keyboard shortcuts
     document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {                 // Esc closes any open panel/card
+        helpPanel.hidden = true;
+        exportPanel.hidden = true;
+        if (!card.hidden) closeCard();
+        setArmed(false);
+        return;
+      }
       var meta = e.ctrlKey || e.metaKey;
       if (!meta) return;
       if (e.key === "c" && selectedId) {
@@ -374,7 +388,7 @@
     });
 
     // show help once on first load of edit mode
-    document.getElementById("help-panel").hidden = false;
+    helpPanel.hidden = false;
   }
 
   function buildFileText() {

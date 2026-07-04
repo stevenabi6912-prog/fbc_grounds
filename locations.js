@@ -34,7 +34,15 @@ window.MARKER_TYPES = {
   first_aid:    { icon: "⛑️", label: "First Aid" },
   ladder_ball:  { icon: "🪜", label: "Ladder Ball" },
   washer_toss:  { icon: "🥏", label: "Washer Toss" },
-  spike_ball:   { icon: "🔵", label: "Spike Ball" }
+  spike_ball:   { icon: "🔵", label: "Spike Ball" },
+  pickleball:   { icon: "🥒", label: "Pickleball" },
+  football:     { icon: "🏈", label: "Football" },
+  croquet:      { icon: "🏑", label: "Croquet" },
+  bocce_ball:   { icon: "🟤", label: "Bocce Ball" },
+  giant_jenga:  { icon: "🧱", label: "Giant Jenga" },
+  can_jam:      { icon: "🥫", label: "Can Jam" },
+  slip_slide:   { icon: "🛝", label: "Slip and Slide" },
+  the_island:   { icon: "🏝️", label: "The Island" }
 };
 
 /* The actual pins on the map.
@@ -60,5 +68,14 @@ window.MARKERS = [
   { id: "first_aid-1",    type: "first_aid",     x: 20, y: 80, name: "First Aid",       description: "Edit me: first aid station." },
   { id: "ladder_ball-1",  type: "ladder_ball",   x: 40, y: 80, name: "Ladder Ball",     description: "Edit me: ladder ball info." },
   { id: "washer_toss-1",  type: "washer_toss",   x: 60, y: 80, name: "Washer Toss",     description: "Edit me: washer toss info." },
-  { id: "spike_ball-1",   type: "spike_ball",    x: 80, y: 80, name: "Spike Ball",      description: "Edit me: spike ball info." }
+  { id: "spike_ball-1",   type: "spike_ball",    x: 80, y: 80, name: "Spike Ball",      description: "Edit me: spike ball info." },
+
+  { id: "pickleball-1",   type: "pickleball",    x: 30, y: 30, name: "Pickleball",      description: "Edit me: pickleball info." },
+  { id: "football-1",     type: "football",      x: 50, y: 30, name: "Football",        description: "Edit me: football info." },
+  { id: "croquet-1",      type: "croquet",       x: 70, y: 30, name: "Croquet",         description: "Edit me: croquet info." },
+  { id: "bocce_ball-1",   type: "bocce_ball",    x: 30, y: 50, name: "Bocce Ball",      description: "Edit me: bocce ball info." },
+  { id: "giant_jenga-1",  type: "giant_jenga",   x: 50, y: 50, name: "Giant Jenga",     description: "Edit me: giant Jenga info." },
+  { id: "can_jam-1",      type: "can_jam",       x: 70, y: 50, name: "Can Jam",         description: "Edit me: can jam info." },
+  { id: "slip_slide-1",   type: "slip_slide",    x: 30, y: 70, name: "Slip and Slide",  description: "Edit me: slip and slide info." },
+  { id: "the_island-1",   type: "the_island",    x: 50, y: 70, name: "The Island",      description: "Edit me: placeholder description." }
 ];
