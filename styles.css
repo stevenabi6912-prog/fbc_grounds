@@ -15,6 +15,12 @@
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
+/* The HTML `hidden` attribute must always win. Several overlays (#no-map,
+   #help-panel, #export-panel) set `display: flex` via an ID selector, which
+   outranks the browser's default `[hidden] { display: none }` — without this
+   rule they'd never actually hide. `!important` guarantees hidden means hidden. */
+[hidden] { display: none !important; }
+
 html, body {
   margin: 0; padding: 0;
   height: 100%;
