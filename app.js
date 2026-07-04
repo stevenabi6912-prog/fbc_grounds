@@ -38,6 +38,22 @@
     ty = ch <= vh ? (vh - ch) / 2 : clamp(ty, vh - ch, 0);
     canvas.style.transform = "translate(" + tx + "px," + ty + "px) scale(" + scale + ")";
     canvas.style.setProperty("--s", scale);
+    updateMarkers();
+  }
+
+  // Reposition every marker so it tracks the map. Screen point of a marker at
+  // map fraction (x/100, y/100) is: translate + fraction * baseSize * scale.
+  // Markers themselves are never scaled, so they stay pixel-crisp.
+  function updateMarkers() {
+    var BW = canvas.offsetWidth, BH = canvas.offsetHeight;
+    for (var i = 0; i < markerEls.length; i++) {
+      positionMarker(markerEls[i].el, markerEls[i].m, BW, BH);
+    }
+  }
+  function positionMarker(el, m, BW, BH) {
+    if (BW === undefined) { BW = canvas.offsetWidth; BH = canvas.offsetHeight; }
+    el.style.left = (tx + (m.x / 100) * BW * scale) + "px";
+    el.style.top  = (ty + (m.y / 100) * BH * scale) + "px";
   }
 
   // Scale at which the WHOLE map fits inside the viewport (fit both width AND
@@ -80,19 +96,21 @@
      MARKERS
      ========================================================================= */
   var selectedId = null;
+  var markerEls = [];   // [{ el, m }] — kept so updateMarkers() can reposition
 
   function render() {
     layer.innerHTML = "";
+    markerEls = [];
     markers.forEach(function (m) {
       var el = document.createElement("div");
       el.className = "marker" + (m.id === selectedId ? " selected" : "");
-      el.style.left = m.x + "%";
-      el.style.top  = m.y + "%";
       el.textContent = iconFor(m);
       el.dataset.id = m.id;
       attachMarker(el, m);
       layer.appendChild(el);
+      markerEls.push({ el: el, m: m });
     });
+    updateMarkers();   // set screen positions from the current transform
   }
 
   function attachMarker(el, m) {
@@ -113,9 +131,7 @@
       if (EDIT && dragging) {
         var p = pctFromEvent(e.clientX, e.clientY);
         m.x = p.x; m.y = p.y;
-        el.style.left = m.x + "%";
-        el.style.top  = m.y + "%";
-        // keep an open card's fields from fighting the drag — nothing to update
+        positionMarker(el, m);   // move it live to the new screen point
       }
     });
 

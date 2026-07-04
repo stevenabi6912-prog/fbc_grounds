@@ -55,5 +55,5 @@ window.MARKERS = [
   { id: "can_jam-1", type: "can_jam", x: 66.1, y: 28.9, name: "Can Jam", description: "" },
   { id: "slip_slide-1", type: "slip_slide", x: 36.6, y: 56.1, name: "Slip and Slide", description: "" },
   { id: "the_island-1", type: "the_island", x: 33.9, y: 65, name: "The Island", description: "" },
-  { id: "restrooms-mr6q9kvr166", type: "restrooms", x: 75.2, y: 35.3, name: "Restrooms", description: "In the back hallway dowstairs" }
+  { id: "restrooms-mr6q9kvr166", type: "restrooms", x: 75.2, y: 35.3, name: "Restrooms", description: "In the back hallway downstairs" }
 ];

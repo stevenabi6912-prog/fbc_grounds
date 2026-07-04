@@ -18,7 +18,6 @@
   <div id="viewport">
     <div id="canvas">
       <img id="map" src="public/grounds-map.png" alt="Event grounds map" draggable="false" />
-      <div id="marker-layer"></div>
       <!-- missing-image fallback -->
       <div id="no-map" hidden>
         <p>🗺️</p>
@@ -26,6 +25,9 @@
         <p class="small">Put your image at <code>public/grounds-map.png</code></p>
       </div>
     </div>
+    <!-- Markers live OUTSIDE the scaled canvas, in a viewport-level overlay, so
+         they stay crisp at any zoom instead of being stretched with the map. -->
+    <div id="marker-layer"></div>
   </div>
 
   <!-- Zoom controls -->

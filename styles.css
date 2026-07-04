@@ -99,16 +99,30 @@ html, body {
 #no-map .small { font-size: 13px; opacity: .8; }
 #no-map code { background: rgba(0,0,0,.35); padding: 2px 6px; border-radius: 4px; }
 
+/* ---- Marker overlay ----
+   Sits on top of the whole viewport, NOT inside the scaled #canvas. JS keeps
+   each marker's screen position in sync with the map's pan/zoom. Because this
+   layer is never scaled, the icons render crisp at every zoom level.
+   pointer-events:none lets map pans pass through the gaps; markers re-enable
+   their own pointer events. */
+#marker-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 5;
+}
+
 /* ---- Markers ----
-   The dot is anchored by its CENTER on the x/y point (translate -50%,-50%),
-   and counter-scaled (1/--s) so it stays a constant ~40px on screen at any
-   zoom. It's a clean circle — no pin tail — so the tap/drag point IS the
-   visual center. */
+   Positioned in px by JS (left/top = screen point), anchored by CENTER via
+   translate(-50%,-50%). Constant 40px, never scaled — so always sharp. A clean
+   circle (no pin tail) means the tap/drag point IS the visual center. */
 .marker {
   position: absolute;
   width: 40px; height: 40px;
   margin: 0;
-  transform: translate(-50%, -50%) scale(calc(1 / var(--s)));
+  pointer-events: auto;
+  transform: translate(-50%, -50%);
   transform-origin: center center;
   display: flex; align-items: center; justify-content: center;
   background: var(--cream);
