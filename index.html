@@ -37,6 +37,34 @@
     <button id="zoom-reset" aria-label="Reset view">⟳</button>
   </div>
 
+  <!-- Schedule button (always visible) -->
+  <button id="btn-schedule" aria-label="See the schedule">📅 Schedule</button>
+
+  <!-- Schedule panel -->
+  <div id="schedule-panel" hidden>
+    <div class="schedule-inner">
+      <div class="sched-header">
+        <div class="sched-church">★ Faith Baptist Church ★</div>
+        <div class="sched-name">Independence Day Celebration</div>
+        <div class="sched-sub">America 250 &nbsp;•&nbsp; Sunday, July 5th</div>
+      </div>
+      <ul class="sched-list">
+        <li><span class="sched-time">12:15 PM</span><span class="sched-event">Morning Service Ends</span></li>
+        <li><span class="sched-time">12:15–1:15 PM</span><span class="sched-event">Lunch: Pulled Pork<small>Tournament sign-ups open by the food line</small></span></li>
+        <li><span class="sched-time">1:15 PM</span><span class="sched-event">Welcome &amp; Announcements</span></li>
+        <li><span class="sched-time">1:30 PM</span><span class="sched-event">Open Play Begins<small>Bounce house, bucket golf, chess, checkers, giant bubbles, photo booth, kids area</small></span></li>
+        <li class="sched-tourney"><span class="sched-time">1:30 PM</span><span class="sched-event">🏆 Cornhole Tournament <em>(doubles)</em></span></li>
+        <li class="sched-tourney"><span class="sched-time">2:15 PM</span><span class="sched-event">🏆 Horseshoes Tournament <em>(doubles)</em></span></li>
+        <li class="sched-tourney"><span class="sched-time">3:00 PM</span><span class="sched-event">🏆 Volleyball Tournament <em>(teams)</em></span></li>
+        <li><span class="sched-time">4:00 PM</span><span class="sched-event">Championship Finals</span></li>
+        <li><span class="sched-time">4:30 PM</span><span class="sched-event">Awards &amp; Prizes</span></li>
+        <li><span class="sched-time">4:45 PM</span><span class="sched-event">Wrap Up</span></li>
+      </ul>
+      <div class="sched-footer">Open play runs all afternoon — jump in between tournament rounds!</div>
+      <button id="btn-schedule-close" class="sched-close">Close</button>
+    </div>
+  </div>
+
   <!-- Info card / bottom sheet -->
   <div id="card-backdrop" hidden></div>
   <aside id="card" hidden aria-live="polite">

@@ -486,9 +486,22 @@
     applyTransform();
   });
 
+  // Schedule popup — works in guest AND edit mode.
+  function initSchedule() {
+    var panel = document.getElementById("schedule-panel");
+    if (!panel) return;
+    function show() { panel.hidden = false; }
+    function hide() { panel.hidden = true; }
+    document.getElementById("btn-schedule").addEventListener("click", show);
+    document.getElementById("btn-schedule-close").addEventListener("click", hide);
+    panel.addEventListener("click", function (e) { if (e.target === panel) hide(); });  // click outside
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") hide(); });
+  }
+
   function boot() {
     render();
     refit();
+    initSchedule();
     if (EDIT) initEdit();
   }
   if (mapImg.complete) boot();
