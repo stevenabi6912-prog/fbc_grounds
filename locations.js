@@ -57,5 +57,5 @@ window.MARKERS = [
   { id: "slip_slide-1", type: "slip_slide", x: 36.6, y: 56.1, name: "Slip and Slide", description: "2 slip and slides with a hose leading into the pond." },
   { id: "the_island-1", type: "the_island", x: 33.9, y: 65, name: "The Island", description: "A large floating island to play on in the pond." },
   { id: "restrooms-mr6q9kvr166", type: "restrooms", x: 74.5, y: 35.8, name: "Restrooms", description: "In the back hallway downstairs. Family bathroom available." },
-  { id: "tournament_signup-1", type: "tournament_signup", x: 40, y: 30, name: "Tournament Sign-Up", description: "Sign up here for the tournaments: Cornhole (1:30 PM), Horseshoes (2:15 PM), and Volleyball (3:00 PM)." }
+  { id: "tournament_signup-1", type: "tournament_signup", x: 74.7, y: 53, name: "Tournament Sign-Up", description: "Sign up here for the tournaments: Cornhole (1:30 PM), Horseshoes (2:15 PM), and Volleyball (3:00 PM)." }
 ];
